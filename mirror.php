@@ -2,7 +2,7 @@
 /*
 Plugin Name: Mirror
 Description: Sync your WordPress environments
-Version: 1.0
+Version: 1.0-alpha
 */
 
 class Mirror {
