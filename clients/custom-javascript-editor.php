@@ -1,6 +1,6 @@
 <?php
 
-class WordPress_Enterprise_CJE_Client {
+class Custom_Javascript_Editor_Client {
 
 	const SLUG = 'custom-javascript';
 
@@ -37,27 +37,27 @@ class WordPress_Enterprise_CJE_Client {
 	}
 
 	function add_meta_boxes() {
-		global $wordpress_enterprise_deployment;
-		$option = $wordpress_enterprise_deployment::OPTION;
+		global $mirror;
+		$option = $mirror::OPTION;
 
 		if ( get_option( $option . '_mode' ) )
-			add_meta_box( self::SLUG, __( 'Local WordPress Enterprise Development', 'wordpress-enterprise-deployment' ), array( $this, 'meta_box' ), 'customjs', 'normal' );
+			add_meta_box( self::SLUG, __( 'WordPress Mirror', 'mirror' ), array( $this, 'meta_box' ), 'customjs', 'normal' );
 	}
 
 	/**
 	 * Display a meta box with merge, deploy, and clone buttons
 	 */
 	function meta_box() {
-		global $wordpress_enterprise_deployment;
-		$option = $wordpress_enterprise_deployment::OPTION;
+		global $mirror;
+		$option = $mirror::OPTION;
 		$options = get_option( $option );
 		?>
 
 		<form method="POST">
 			<?php
-				submit_button( __( 'Merge', 'cje-api' ), 'secondary', 'merge', false );
-				submit_button( __( 'Deploy', 'cje-api' ), 'secondary', 'deploy', false );
-				submit_button( __( 'Clone', 'cje-api' ), 'secondary', 'clone', false );
+				submit_button( __( 'Merge', 'mirror' ), 'secondary', 'merge', false );
+				submit_button( __( 'Deploy', 'mirror' ), 'secondary', 'deploy', false );
+				submit_button( __( 'Clone', 'mirror' ), 'secondary', 'clone', false );
 				wp_nonce_field( self::SLUG, self::SLUG );
 			?>
 		</form>
@@ -105,8 +105,8 @@ class WordPress_Enterprise_CJE_Client {
 	 * Deploy javascript to remote server
 	 */
 	function deployjs() {
-		global $wordpress_enterprise_deployment;
-		$option = $wordpress_enterprise_deployment::OPTION;
+		global $mirror;
+		$option = $mirror::OPTION;
 		$options = get_option( $option );
 
 		$js_post = $this->get_js_post();
@@ -159,8 +159,8 @@ class WordPress_Enterprise_CJE_Client {
 	 * Retrieve remote javascript through XML-RPC
 	 */
 	function get_remote_js() {
-		global $wordpress_enterprise_deployment;
-		$option = $wordpress_enterprise_deployment::OPTION;
+		global $mirror;
+		$option = $mirror::OPTION;
 		$options = get_option( $option );
 
 		$client = new WP_HTTP_IXR_Client( 'http://' . $options['site'] . '/xmlrpc.php' );
@@ -208,4 +208,4 @@ class WordPress_Enterprise_CJE_Client {
 
 }
 
-new WordPress_Enterprise_CJE_Client();
+new Custom_Javascript_Editor_Client();

@@ -1,6 +1,6 @@
 <?php
 
-class WordPress_Enterprise_CSS_Client {
+class Jetpack_CSS_Client {
 
 	const SLUG = 'editcss';
 
@@ -37,26 +37,26 @@ class WordPress_Enterprise_CSS_Client {
 	}
 
 	function add_meta_boxes() {
-		global $wordpress_enterprise_deployment;
-		$option = $wordpress_enterprise_deployment::OPTION;
+		global $mirror;
+		$option = $mirror::OPTION;
 
 		if ( get_option( $option . '_mode' ) )
-			add_meta_box( self::SLUG, __( 'Local WordPress Enterprise Development', 'wordpress-enterprise-deployment' ), array( $this, 'meta_box' ), 'editcss', 'side' );
+			add_meta_box( self::SLUG, __( 'Local WordPress Enterprise Development', 'mirror' ), array( $this, 'meta_box' ), 'editcss', 'side' );
 	}
 
 	/**
 	 * Display a meta box with merge, deploy, and clone buttons
 	 */
 	function meta_box() {
-		global $wordpress_enterprise_deployment;
-		$option = $wordpress_enterprise_deployment::OPTION;
+		global $mirror;
+		$option = $mirror::OPTION;
 		$options = get_option( $option );
 		?>
 
 		<?php
-			submit_button( __( 'Merge', 'cje-api' ), 'secondary', 'merge', false );
-			submit_button( __( 'Deploy', 'cje-api' ), 'secondary', 'deploy', false );
-			submit_button( __( 'Clone', 'cje-api' ), 'secondary', 'clone', false );
+			submit_button( __( 'Merge', 'mirror' ), 'secondary', 'merge', false );
+			submit_button( __( 'Deploy', 'mirror' ), 'secondary', 'deploy', false );
+			submit_button( __( 'Clone', 'mirror' ), 'secondary', 'clone', false );
 		?>
 
 		<?php
@@ -102,8 +102,8 @@ class WordPress_Enterprise_CSS_Client {
 	 * Deploy css to remote server
 	 */
 	function deploycss() {
-		global $wordpress_enterprise_deployment;
-		$option = $wordpress_enterprise_deployment::OPTION;
+		global $mirror;
+		$option = $mirror::OPTION;
 		$options = get_option( $option );
 
 		$css_post = $this->get_css_post();
@@ -156,8 +156,8 @@ class WordPress_Enterprise_CSS_Client {
 	 * Retrieve remote css through XML-RPC
 	 */
 	function get_remote_css() {
-		global $wordpress_enterprise_deployment;
-		$option = $wordpress_enterprise_deployment::OPTION;
+		global $mirror;
+		$option = $mirror::OPTION;
 		$options = get_option( $option );
 
 		$client = new WP_HTTP_IXR_Client( 'http://' . $options['site'] . '/xmlrpc.php' );
@@ -209,4 +209,4 @@ class WordPress_Enterprise_CSS_Client {
 
 }
 
-new WordPress_Enterprise_CSS_Client();
+new Jetpack_CSS_Client();

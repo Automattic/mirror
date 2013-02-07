@@ -1,14 +1,14 @@
 <?php
 /*
-Plugin Name: WordPress.com Enterprise Deployment
-Description: Deploy CSS and Javascript to your WordPress.com Enterprise website.
+Plugin Name: Mirror
+Description: Sync your WordPress environments
 Version: 1.0
 */
 
-class WordPress_Enterprise_Deployment {
+class Mirror {
 
-	const OPTION = 'wordpress-enterprise-deployment';
-	const SLUG   = 'wordpress-enterprise-deployment';
+	const OPTION = 'mirror';
+	const SLUG   = 'mirror';
 
 	function __construct() {
 		add_action( 'plugins_loaded', array( __CLASS__, 'init' ) );
@@ -19,12 +19,12 @@ class WordPress_Enterprise_Deployment {
 	}
 
 	static function admin_menu() {
-		add_options_page( __( 'WordPress Enterprise Deployment', 'wordpress-enterprise-deployment' ), __( 'Deployment', 'wordpress-enterprise-deployment' ), 'manage_options', self::SLUG, array( __CLASS__, 'options_page' ) );
+		add_options_page( __( 'Mirror', 'mirror' ), __( 'Mirror', 'mirror' ), 'manage_options', self::SLUG, array( __CLASS__, 'options_page' ) );
 	}
 
 	static function options_page() { ?>
 		<div>
-			<h2><?php _e( 'WordPress Enterprise Deployment', 'wordpress-enterprise-deployment' ); ?></h2>
+			<h2><?php _e( 'Site Mirroring', 'mirror' ); ?></h2>
 			<form action="options.php" method="post">
 				<?php settings_fields( self::OPTION ); ?>
 				<?php do_settings_sections( self::SLUG ); ?>
@@ -39,11 +39,11 @@ class WordPress_Enterprise_Deployment {
 
 		add_settings_section( self::SLUG, null, null, self::SLUG );
 
-		add_settings_field( 'site',     __( 'Site', 'wordpress-enterprise-deployment' ),     array( __CLASS__, 'render_site' ),     self::SLUG, self::SLUG );
-		add_settings_field( 'username', __( 'Username', 'wordpress-enterprise-deployment' ), array( __CLASS__, 'render_username' ), self::SLUG, self::SLUG );
-		add_settings_field( 'password', __( 'Password', 'wordpress-enterprise-deployment' ), array( __CLASS__, 'render_password' ), self::SLUG, self::SLUG );
+		add_settings_field( 'site',     __( 'Target Site', 'mirror' ),    array( __CLASS__, 'render_site' ),     self::SLUG, self::SLUG );
+		add_settings_field( 'username', __( 'Username', 'mirror' ),       array( __CLASS__, 'render_username' ), self::SLUG, self::SLUG );
+		add_settings_field( 'password', __( 'Password', 'mirror' ),       array( __CLASS__, 'render_password' ), self::SLUG, self::SLUG );
 
-		add_settings_field( 'mode', __( 'Mode', 'wordpress-enterprise-deployment' ), array( __CLASS__, 'render_mode' ), self::SLUG, self::SLUG );
+		add_settings_field( 'mode', __( 'Mode', 'mirror' ), array( __CLASS__, 'render_mode' ), self::SLUG, self::SLUG );
 
 	}
 
@@ -91,16 +91,16 @@ class WordPress_Enterprise_Deployment {
 		require_once ABSPATH . WPINC . '/class-wp-http-ixr-client.php';
 
 		// Initialize Javascript client code
-		if (!class_exists('WordPress_Enterprise_CJE_Client'))
-			require_once dirname(__FILE__) . '/wordpress-enterprise-cje.php';
+		if (!class_exists('Custom_Javascript_Editor_Client'))
+			require_once dirname(__FILE__) . '/clients/custom-javascript-editor.php';
 
 		// Initialize Javascript client code
-		if (!class_exists('WordPress_Enterprise_CSS_Client'))
-			require_once dirname(__FILE__) . '/wordpress-enterprise-css.php';
+		if (!class_exists('Jetpack_CSS_Client'))
+			require_once dirname(__FILE__) . '/clients/jetpack-css.php';
 
 		// Initialize server code
 		if (!class_exists('WordPress_Enterprise_Deployment_Server'))
-			require_once dirname(__FILE__) . '/wordpress-enterprise-deployment-server.php';
+			require_once dirname(__FILE__) . '/lib/mirror-server.php';
 	}
 
 	/**
@@ -125,4 +125,4 @@ class WordPress_Enterprise_Deployment {
 
 }
 
-$wordpress_enterprise_deployment = new WordPress_Enterprise_Deployment();
+$mirror = new Mirror();

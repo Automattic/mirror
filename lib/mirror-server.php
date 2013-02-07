@@ -12,12 +12,12 @@ class WordPress_Enterprise_Deployment_Server {
 	 * XML-RPC: enterprise.push
 	 */
 	function push( $args ) {
-		global $wp_xmlrpc_server, $wordpress_enterprise_deployment;
+		global $wp_xmlrpc_server, $mirror;
 		$wp_xmlrpc_server->escape( $args );
 
 		$type     = esc_attr( $args[0] );
 		$username = esc_attr( $args[1] );
-		$password = $wordpress_enterprise_deployment::decrypt( $args[2] );
+		$password = $mirror::decrypt( $args[2] );
 		$data     = esc_html( $args[3] );
 
 		// We need a username and password
@@ -47,12 +47,12 @@ class WordPress_Enterprise_Deployment_Server {
 	 * XML-RPC: enterprise.pull
 	 */
 	function pull( $args ) {
-		global $wp_xmlrpc_server, $wordpress_enterprise_deployment;
+		global $wp_xmlrpc_server, $mirror;
 		$wp_xmlrpc_server->escape( $args );
 
 		$type = esc_attr( $args[0] );
 		$username = esc_attr( $args[1] );
-		$password = $wordpress_enterprise_deployment::decrypt( $args[2] );
+		$password = $mirror::decrypt( $args[2] );
 
 		// We need a username and password
 		if ( ! $user = $wp_xmlrpc_server->login( $username, $password ) )
