@@ -19,7 +19,7 @@ class Mirror {
 	}
 
 	static function admin_menu() {
-		add_options_page( __( 'Mirror', 'mirror' ), __( 'Mirror', 'mirror' ), 'manage_options', self::SLUG, array( __CLASS__, 'options_page' ) );
+		add_management_page( __( 'Mirror', 'mirror' ), __( 'Mirror', 'mirror' ), 'manage_options', self::SLUG, array( __CLASS__, 'options_page' ) );
 	}
 
 	static function options_page() { ?>
