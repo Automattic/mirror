@@ -10,8 +10,8 @@ class Jetpack_CSS_Client {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 
 		// TODO: Server events
-		add_action( 'enterprise_push_css', array( $this, 'enterprise_push_css' ) );
-		add_action( 'enterprise_pull_css', array( $this, 'enterprise_pull_css' ) );
+		add_action( 'mirror_push_css', array( $this, 'mirror_push_css' ) );
+		add_action( 'mirror_pull_css', array( $this, 'mirror_pull_css' ) );
 	}
 
 	/**
@@ -110,7 +110,7 @@ class Jetpack_CSS_Client {
 		$css = isset( $_REQUEST['f3'] ) ? $_REQUEST['f3'] : $css_post['post_content'];
 
 		$client = new WP_HTTP_IXR_Client( 'http://' . $options['site'] . '/xmlrpc.php' );
-		$client->query( 'enterprise.push', 'css', $options['username'], $options['password'], $css );
+		$client->query( 'mirror.push', 'css', $options['username'], $options['password'], $css );
 
 		if ( $client->isError() )
 			return false;
@@ -161,7 +161,7 @@ class Jetpack_CSS_Client {
 		$options = get_option( $option );
 
 		$client = new WP_HTTP_IXR_Client( 'http://' . $options['site'] . '/xmlrpc.php' );
-		$client->query( 'enterprise.pull', 'css', $options['username'], $options['password'] );
+		$client->query( 'mirror.pull', 'css', $options['username'], $options['password'] );
 
 		if ( $client->isError() ) {
 			var_dump( $client->getErrorMessage() );
@@ -197,12 +197,12 @@ class Jetpack_CSS_Client {
 	}
 
 	// TODO
-	function enterprise_push_css( $css ) {
+	function mirror_push_css( $css ) {
 		return $this->save_css_revision( $css );
 	}
 
 	// TODO
-	function enterprise_pull_css() {
+	function mirror_pull_css() {
 		$css_post = $this->get_css_post();
 		return $css_post['post_content'];
 	}

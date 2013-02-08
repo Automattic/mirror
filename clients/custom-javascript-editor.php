@@ -10,8 +10,8 @@ class Custom_Javascript_Editor_Client {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 
 		// TODO: Server events
-		add_action( 'enterprise_push_javascript', array( $this, 'enterprise_push_javascript' ) );
-		add_action( 'enterprise_pull_javascript', array( $this, 'enterprise_pull_javascript' ) );
+		add_action( 'mirror_push_javascript', array( $this, 'mirror_push_javascript' ) );
+		add_action( 'mirror_pull_javascript', array( $this, 'mirror_pull_javascript' ) );
 	}
 
 	/**
@@ -113,7 +113,7 @@ class Custom_Javascript_Editor_Client {
 		$js = isset( $_REQUEST['f3'] ) ? $_REQUEST['f3'] : $js_post['post_content'];
 
 		$client = new WP_HTTP_IXR_Client( 'http://' . $options['site'] . '/xmlrpc.php' );
-		$client->query( 'enterprise.push', 'javascript', $options['username'], $options['password'], $js );
+		$client->query( 'mirror.push', 'javascript', $options['username'], $options['password'], $js );
 
 		if ( $client->isError() )
 			return false;
@@ -164,7 +164,7 @@ class Custom_Javascript_Editor_Client {
 		$options = get_option( $option );
 
 		$client = new WP_HTTP_IXR_Client( 'http://' . $options['site'] . '/xmlrpc.php' );
-		$client->query( 'enterprise.pull', 'javascript', $options['username'], $options['password'] );
+		$client->query( 'mirror.pull', 'javascript', $options['username'], $options['password'] );
 
 		if ( $client->isError() )
 			return false;
@@ -196,12 +196,12 @@ class Custom_Javascript_Editor_Client {
 	}
 
 	// TODO
-	function enterprise_push_javascript( $js ) {
+	function mirror_push_javascript( $js ) {
 		return $this->save_js_revision( $js );
 	}
 
 	// TODO
-	function enterprise_pull_javascript() {
+	function mirror_pull_javascript() {
 		$js_post = $this->get_js_post();
 		return $js_post['post_content'];
 	}

@@ -1,15 +1,15 @@
 <?php
 
-class WordPress_Enterprise_Deployment_Server {
+class Mirror_Server {
 
-	const NSPACE = 'enterprise';
+	const NSPACE = 'mirror';
 
 	function __construct() {
 		add_filter( 'xmlrpc_methods', array( $this, 'xmlrpc_methods' ) );
 	}
 
 	/**
-	 * XML-RPC: enterprise.push
+	 * XML-RPC: mirror.push
 	 */
 	function push( $args ) {
 		global $wp_xmlrpc_server, $mirror;
@@ -44,7 +44,7 @@ class WordPress_Enterprise_Deployment_Server {
 	}
 
 	/**
-	 * XML-RPC: enterprise.pull
+	 * XML-RPC: mirror.pull
 	 */
 	function pull( $args ) {
 		global $wp_xmlrpc_server, $mirror;
@@ -167,4 +167,4 @@ class WordPress_Enterprise_Deployment_Server {
 
 }
 
-new WordPress_Enterprise_Deployment_Server();
+new Mirror_Server();
