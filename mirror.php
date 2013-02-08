@@ -25,6 +25,14 @@ class Mirror {
 	static function options_page() { ?>
 		<div>
 			<h2><?php _e( 'Site Mirroring', 'mirror' ); ?></h2>
+			<?php
+			// Validate the connection on page load
+			if ( ! isset( $_GET['settings-updated'] ) )
+				self::test_connection();
+
+			settings_errors();
+			?>
+
 			<form action="options.php" method="post">
 				<?php settings_fields( self::OPTION ); ?>
 				<?php do_settings_sections( self::SLUG ); ?>
@@ -44,7 +52,35 @@ class Mirror {
 		add_settings_field( 'password', __( 'Password', 'mirror' ),       array( __CLASS__, 'render_password' ), self::SLUG, self::SLUG );
 
 		add_settings_field( 'mode', __( 'Mode', 'mirror' ), array( __CLASS__, 'render_mode' ), self::SLUG, self::SLUG );
+	}
 
+	/**
+	 * Tests the connection details to the remote server and display a notification message.
+	 */
+	static function test_connection() {
+		$options  = get_option( self::OPTION );
+		$password = isset( $options['password'] ) ? $options['password'] : '';
+		$site     = isset( $options['site'] )     ? $options['site']     : '';
+		$username = isset( $options['username'] ) ? $options['username'] : '';
+
+		// Test if the credentials are valid
+		$client = new WP_HTTP_IXR_Client( "http://{$site}/xmlrpc.php" );
+		$client->query( 'mirror.pull', 'javascript', $username, $password );
+
+		$error = '';
+		if ( $client->isError() ) {
+			$error = __( "There's a problem connecting to the Target Site. Please check the connection details.", 'mirror' );
+
+			// "Incorrect username or password."
+			if ( 403 === $client->getErrorCode() )
+				$error = __( 'The username or password for the Target Site is incorrect.', 'mirror' );
+		}
+
+		if ( ! $error )
+			return;
+
+		// Add error
+		add_settings_error( 'site', 'mirror-cloudy', $error, 'error' );
 	}
 
 	static function render_site() {
@@ -76,9 +112,11 @@ class Mirror {
 	}
 
 	static function sanitize_text_field( $array ) {
-		$array = array_filter( $array, 'sanitize_text_field' );
-
+		$array             = array_filter( $array, 'sanitize_text_field' );
 		$array['password'] = self::encrypt( $array['password'] );
+
+		// Check the connection details
+		self::test_connection();
 
 		return $array;
 	}
