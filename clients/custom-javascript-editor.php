@@ -41,7 +41,7 @@ class Custom_Javascript_Editor_Client {
 		$option = $mirror::OPTION;
 
 		if ( get_option( $option . '_mode' ) )
-			add_meta_box( self::SLUG, __( 'WordPress Mirror', 'mirror' ), array( $this, 'meta_box' ), 'customjs', 'normal' );
+			add_meta_box( self::SLUG, __( 'Mirror', 'mirror' ), array( $this, 'meta_box' ), 'customjs', 'normal' );
 	}
 
 	/**

@@ -41,7 +41,7 @@ class Jetpack_CSS_Client {
 		$option = $mirror::OPTION;
 
 		if ( get_option( $option . '_mode' ) )
-			add_meta_box( self::SLUG, __( 'Local WordPress Enterprise Development', 'mirror' ), array( $this, 'meta_box' ), 'editcss', 'side' );
+			add_meta_box( self::SLUG, __( 'Mirror', 'mirror' ), array( $this, 'meta_box' ), 'editcss', 'side' );
 	}
 
 	/**
