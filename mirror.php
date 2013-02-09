@@ -26,10 +26,7 @@ class Mirror {
 		<div>
 			<h2><?php _e( 'Site Mirroring', 'mirror' ); ?></h2>
 			<?php
-			// Validate the connection on page load
-			if ( ! isset( $_GET['settings-updated'] ) )
-				self::test_connection();
-
+			self::test_connection();
 			settings_errors();
 			?>
 
@@ -56,9 +53,18 @@ class Mirror {
 
 	/**
 	 * Tests the connection details to the remote server and display a notification message.
+	 *
+	 * @param array $options Optional. If set, use these values for the connection test.
 	 */
-	static function test_connection() {
-		$options  = get_option( self::OPTION );
+	static function test_connection( $options = array() ) {
+
+		// If in server mode, don't test connection
+		if ( 0 === (int) get_option( self::OPTION . '_mode', 0 ) )
+			return;
+
+		if ( empty( $options ) )
+			$options = get_option( self::OPTION );
+
 		$password = isset( $options['password'] ) ? $options['password'] : '';
 		$site     = isset( $options['site'] )     ? $options['site']     : '';
 		$username = isset( $options['username'] ) ? $options['username'] : '';
@@ -114,9 +120,6 @@ class Mirror {
 	static function sanitize_text_field( $array ) {
 		$array             = array_filter( $array, 'sanitize_text_field' );
 		$array['password'] = self::encrypt( $array['password'] );
-
-		// Check the connection details
-		self::test_connection();
 
 		return $array;
 	}
