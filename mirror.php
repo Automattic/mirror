@@ -113,8 +113,8 @@ class Mirror {
 	static function render_mode() {
 		$option = self::OPTION . '_mode';
 		$mode = get_option( $option, false );
-		printf( '<input type="radio" name="%s", value="1" %s> Client<br>', $option, checked( $mode, true, false ) );
-		printf( '<input type="radio" name="%s", value="0" %s> Server', $option, checked( !$mode, true, false ) );
+		printf( '<input type="radio" name="%s", value="1" %s> %s<br>', $option, checked( $mode, true, false ), __( 'Client', 'mirror' ) );
+		printf( '<input type="radio" name="%s", value="0" %s> %s', $option, checked( !$mode, true, false ), __( 'Server', 'mirror' ) );
 	}
 
 	static function sanitize_text_field( $array ) {
