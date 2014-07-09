@@ -149,14 +149,14 @@ class Mirror {
 	 */
 	public static function encrypt( $data ) {
 		$data = serialize( $data );
-		return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5(self::SLUG), $data, MCRYPT_MODE_CBC, md5(md5(self::SLUG))));
+		return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5(AUTH_KEY . self::SLUG), $data, MCRYPT_MODE_CBC, md5(md5(AUTH_KEY . self::SLUG))));
 	}
 
 	/**
 	 * Decrypt data when it is recieved
 	 */
 	public static function decrypt( $data ) {
-		$data = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5(self::SLUG), base64_decode($data), MCRYPT_MODE_CBC, md5(md5(self::SLUG))), "\0");
+		$data = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5(AUTH_KEY . self::SLUG), base64_decode($data), MCRYPT_MODE_CBC, md5(md5(AUTH_KEY . self::SLUG))), "\0");
 
 		if ( !$data )
 			return false;
