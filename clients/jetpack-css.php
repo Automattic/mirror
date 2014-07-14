@@ -21,6 +21,10 @@ class Jetpack_CSS_Client {
 		if ( !isset( $_REQUEST['page'] ) || $_REQUEST['page'] != self::SLUG )
 			return;
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
 		if ( isset( $_POST['deploy'] ) ) {
 			if ( check_admin_referer( 'safecss' ) )
 				$this->deploycss();

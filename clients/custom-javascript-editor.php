@@ -21,6 +21,10 @@ class Custom_Javascript_Editor_Client {
 		if ( !isset( $_REQUEST['page'] ) || $_REQUEST['page'] != self::SLUG )
 			return;
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
 		if ( isset( $_POST['deploy'] ) ) {
 			if ( check_admin_referer( self::SLUG, self::SLUG ) )
 				$this->deployjs();
