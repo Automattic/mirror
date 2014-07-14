@@ -145,23 +145,26 @@ class Mirror {
 	}
 
 	/**
-	 * Encrypt data for sending over the wire
+	 * Encode data for sending over the wire
+	 *
+	 * Function is mis-named, but has been kept for backwards compatibilty with older versions.
 	 */
 	public static function encrypt( $data ) {
-		$data = serialize( $data );
-		return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5(AUTH_KEY . self::SLUG), $data, MCRYPT_MODE_CBC, md5(md5(AUTH_KEY . self::SLUG))));
+		return base64_encode( $data );
 	}
 
 	/**
-	 * Decrypt data when it is recieved
+	 * Decode data when it is recieved
+	 *
+	 * Function is mis-named, but has been kept for backwards compatibilty with older versions.
 	 */
 	public static function decrypt( $data ) {
-		$data = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5(AUTH_KEY . self::SLUG), base64_decode($data), MCRYPT_MODE_CBC, md5(md5(AUTH_KEY . self::SLUG))), "\0");
-
-		if ( !$data )
+		$data = base64_decode( $data );
+		if ( ! $data ) {
 			return false;
+		}
 
-		return @unserialize( $data );
+		return $data;
 	}
 
 }
