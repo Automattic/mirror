@@ -83,9 +83,9 @@ class Custom_Javascript_Editor_Client {
 
 				// fix a merge conflict
 				if ( $remote != $current && $remote != $original ): ?>
-					<textarea id="f0" style="display:none"><?php echo $original; ?></textarea>
-					<textarea id="f1" style="display:none"><?php echo $current; ?></textarea>
-					<textarea id="f2" style="display:none"><?php echo $remote; ?></textarea>
+					<textarea id="f0" style="display:none"><?php echo esc_textarea( $original ); ?></textarea>
+					<textarea id="f1" style="display:none"><?php echo esc_textarea( current ); ?></textarea>
+					<textarea id="f2" style="display:none"><?php echo esc_textarea( $remote ); ?></textarea>
 				<?php endif; ?>
 			<?php endif; ?>
 <?php }
@@ -112,7 +112,7 @@ class Custom_Javascript_Editor_Client {
 		$js_post = $this->get_js_post();
 		$js = isset( $_REQUEST['f3'] ) ? $_REQUEST['f3'] : $js_post['post_content'];
 
-		$client = new WP_HTTP_IXR_Client( 'http://' . $options['site'] . '/xmlrpc.php' );
+		$client = new WP_HTTP_IXR_Client( esc_url_raw( 'http://' . $options['site'] . '/xmlrpc.php' ) );
 		$client->query( 'mirror.push', 'javascript', $options['username'], $options['password'], $js );
 
 		if ( $client->isError() )
@@ -163,7 +163,7 @@ class Custom_Javascript_Editor_Client {
 		$option = $mirror::OPTION;
 		$options = get_option( $option );
 
-		$client = new WP_HTTP_IXR_Client( 'http://' . $options['site'] . '/xmlrpc.php' );
+		$client = new WP_HTTP_IXR_Client( esc_url_raw( 'http://' . $options['site'] . '/xmlrpc.php' ) );
 		$client->query( 'mirror.pull', 'javascript', $options['username'], $options['password'] );
 
 		if ( $client->isError() )

@@ -70,7 +70,7 @@ class Mirror {
 		$username = isset( $options['username'] ) ? $options['username'] : '';
 
 		// Test if the credentials are valid
-		$client = new WP_HTTP_IXR_Client( "http://{$site}/xmlrpc.php" );
+		$client = new WP_HTTP_IXR_Client( esc_url_raw( "http://{$site}/xmlrpc.php" ) );
 		$client->query( 'mirror.pull', 'javascript', $username, $password );
 
 		$error = '';
@@ -93,28 +93,46 @@ class Mirror {
 		$option = self::OPTION;
 		$options = get_option( $option );
 		$site = isset( $options['site'] ) ? $options['site'] : '';
-		echo "<input id='{$option}_site' name='{$option}[site]' size='40' type='text' value='{$site}' />";
+
+		printf(
+			'<input id="%s" name="%s" size="40" type="text" value="%s" />',
+			esc_attr( $option . '_site' ),
+			esc_attr( $option . '[site]' ),
+			esc_attr( $site )
+		);
 	}
 
 	static function render_username() {
 		$option = self::OPTION;
 		$options = get_option( $option );
 		$username = isset( $options['username'] ) ? $options['username'] : '';
-		echo "<input id='{$option}_username' name='{$option}[username]' size='40' type='text' value='{$username}' />";
+
+		printf(
+			'<input id="%s" name="%s" size="40" type="text" value="%s" />',
+			esc_attr( $option . '_username' ),
+			esc_attr( $option . '[username]' ),
+			esc_attr( $username )
+		);
 	}
 
 	static function render_password() {
 		$option = self::OPTION;
 		$options = get_option( $option );
 		$password = isset( $options['password' ] ) ? self::decrypt( $options['password'] ) : '';
-		echo "<input id='{$option}_password' name='{$option}[password]' size='40' type='password' value='{$password}' />";
+
+		printf(
+			'<input id="%s" name="%s" size="40" type="password" value="%s" />',
+			esc_attr( $option . '_password' ),
+			esc_attr( $option . '[password]' ),
+			esc_attr( $password )
+		);
 	}
 
 	static function render_mode() {
 		$option = self::OPTION . '_mode';
 		$mode = get_option( $option, false );
-		printf( '<input type="radio" name="%s", value="1" %s> %s<br>', $option, checked( $mode, true, false ), __( 'Client', 'mirror' ) );
-		printf( '<input type="radio" name="%s", value="0" %s> %s', $option, checked( !$mode, true, false ), __( 'Server', 'mirror' ) );
+		printf( '<input type="radio" name="%s", value="1" %s> %s<br>', esc_attr( $option ), checked( $mode, true, false ), __( 'Client', 'mirror' ) );
+		printf( '<input type="radio" name="%s", value="0" %s> %s', esc_attr( $option ), checked( !$mode, true, false ), __( 'Server', 'mirror' ) );
 	}
 
 	static function sanitize_text_field( $array ) {
